@@ -1,0 +1,43 @@
+#include <stdio.h>
+#define MAX 9
+#define SUB 3
+
+int zerofind(int r_number[MAX][MAX], int *iptr, int *jptr);
+int correct(int r_number[MAX][MAX], int triplesum[MAX], int num, int i, int j);
+int rule1(int r_number[MAX][MAX], int i, int num);
+int rule2(int r_number[MAX][MAX], int i, int num);
+int rule3(int r_number[MAX][MAX], int i, int j, int num);
+int rule4(int r_number[MAX][MAX], int triplesum[MAX], int i, int num);
+int work(int r_number[MAX][MAX], int triplesum[MAX]);
+
+int main(){
+	int number[MAX][MAX+1];
+	int r_number[MAX][MAX];
+	int triplesum[MAX];
+	int i,j,k;
+	
+	//number에 입력받기
+	for(i=0; i<MAX; i++){
+		for(j=0; j<MAX+1; j++){
+			scanf("%d", &number[i][j]);
+		}
+	}
+	
+	//triple sum 저장하기
+	for(i=0; i<MAX; i++){
+		triplesum[i] = number[i][0];
+	}
+	
+	//스도쿠 숫자만 저장하기
+	for(i=0; i<MAX; i++){
+		for(j=0; j<MAX; j++){
+			r_number[i][j] = number[i][j+1];
+		}
+	}
+	
+	//스도쿠 풀기
+	if(work(r_number, triplesum)){
+		for()
+	}
+
+}
