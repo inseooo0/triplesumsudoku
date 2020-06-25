@@ -2,7 +2,7 @@
 #define MAX 9
 #define SUB 3
 
-int zerofind(int r_number[MAX][MAX], int *iptr, int *jptr);
+int zerofind(int r_number[MAX][MAX], int* iptr, int* jptr);
 int correct(int r_number[MAX][MAX], int triplesum[MAX], int num, int i, int j);
 int rule1(int r_number[MAX][MAX], int i, int num);
 int rule2(int r_number[MAX][MAX], int i, int num);
@@ -10,34 +10,141 @@ int rule3(int r_number[MAX][MAX], int i, int j, int num);
 int rule4(int r_number[MAX][MAX], int triplesum[MAX], int i, int num);
 int work(int r_number[MAX][MAX], int triplesum[MAX]);
 
-int main(){
-	int number[MAX][MAX+1];
+int main() {
+	int number[MAX][MAX + 1];
 	int r_number[MAX][MAX];
 	int triplesum[MAX];
-	int i,j,k;
-	
+	int i, j, k;
+
 	//number에 입력받기
-	for(i=0; i<MAX; i++){
-		for(j=0; j<MAX+1; j++){
+	for (i = 0; i < MAX; i++) {
+		for (j = 0; j < MAX + 1; j++) {
 			scanf("%d", &number[i][j]);
 		}
 	}
-	
+
 	//triple sum 저장하기
-	for(i=0; i<MAX; i++){
+	for (i = 0; i < MAX; i++) {
 		triplesum[i] = number[i][0];
 	}
-	
+
 	//스도쿠 숫자만 저장하기
-	for(i=0; i<MAX; i++){
-		for(j=0; j<MAX; j++){
-			r_number[i][j] = number[i][j+1];
+	for (i = 0; i < MAX; i++) {
+		for (j = 0; j < MAX; j++) {
+			r_number[i][j] = number[i][j + 1];
 		}
 	}
-	
+
 	//스도쿠 풀기
-	if(work(r_number, triplesum)){
-		for()
+	if (work(r_number, triplesum)) {
+		for (i = 0; i < MAX; i++) {
+			for (j = 0; j < MAX; j++) {
+				printf("%d", r_number[i][j]);
+				if (j != 8) {
+					printf(" ");
+				}
+			}
+			if (i != 8) {
+				printf("\n");
+			}
+		}
+	}
+	else {
+		printf("false");
+	}
+	return 0;
+}
+
+int correct(int r_number[MAX][MAX], int triplesum[MAX], int num, int i, int j) {
+	int a, b, c, d;
+	a = rule1(r_number, i, num);
+	b = rule2(r_number, i, num);
+	c = rule3(r_number, i, j, num);
+	if (j == 8) {
+		d = rule4(r_number, triplesum, i, num);
+	}
+	else {
+		d = 1;
 	}
 
+	return !a && !b && !c && d;
+}
+
+int rule1(int r_number[MAX][MAX], int i, int num) {
+	//row에 해당 num 있을 경우 1 return
+	int count;
+	for (count = 0; count < MAX; count++) {
+		if (num == r_number[i][count]) {
+			return 1;
+		}
+		return 0;
+	}
+}
+
+int rule2(int r_number[MAX][MAX], int j, int num) {
+	//column에 해당 num 있을 경우 1 return
+	int count;
+	for (count = 0; count < MAX; count++) {
+		if (num == r_number[count][j]) {
+			return 1;
+		}
+		return 0;
+	}
+}
+
+int rule3(int r_number[MAX][MAX], int i, int j, int num) {
+	//subsquare에 해당 num 있을 경우 1 return
+	int a,b;
+	for (a = 0; a < SUB; a++) {
+		for (b = 0; b < SUB; b++) {
+			if (num == r_number[i + a][j + b]) {
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
+
+int rule4(int r_number[MAX][MAX], int triplesum[MAX], int i, int num) {
+	//해당 num이 triplesum 조건 만족시킬 경우 1 return
+	int sum;
+	sum = 1000 * r_number[i][0] + 100 * (r_number[i][1] + r_number[i][4]) + 10 * (r_number[i][2] + r_number[i][5] + r_number[i][7]) + r_number[i][3] + r_number[i][6] + num;
+	if (sum == triplesum[i]) {
+		return 1;
+	}
+	return 0;
+}
+
+int work(int r_number[MAX][MAX], int triplesum[MAX]) {
+	int num;
+	int i, j;
+	i = 0; j = 0;
+
+	if (zerofind(r_number, &i, &j)) {
+		return 1;
+	}
+
+	for (num = 1; num <= MAX; num++) {
+		if (correct(r_number, triplesum, num, i, j)) {
+			r_number[i][j] = num;
+			if (work(r_number, triplesum)) {
+				return 1;
+			}
+			r_number[i][j] = 0;
+		}
+	}
+
+	return 0;
+}
+
+int zerofind(int r_number[MAX][MAX], int *iptr, int *jptr) {
+	for (*iptr = 0; *iptr < MAX; *iptr++) {
+		for (*jptr = 0; *jptr < MAX; *jptr++) {
+			if (r_number[*iptr][*jptr] == 0) {
+				return 1;
+			}
+		}
+	}
+
+	return 0;
 }
